@@ -94,8 +94,8 @@ client.on('guildMemberAdd', async member => {
 	await client.mutes.defer;
 
 	if (client.mutes.has(member.id)) {
-		member.roles.add('712365170541985832');
-		member.roles.add('712364643724689441');
+		member.roles.add('712365121485406378');
+		member.roles.add('712364643724689441'); 
 	}
 });
 
