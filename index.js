@@ -18,6 +18,7 @@ client.checkPermission = (argument, permission_node = 'ADMINISTRATOR') => {
 
 client.bans = new Enmap({ name: 'bans' });
 client.mutes = new Enmap({ name: 'mutes' });
+client.warns = new Enmap({ name: 'warns' });
 
 client.on('ready', async () => {
 	console.log(`Diep Dominion Maintenance#4675 is online.`)
