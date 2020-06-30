@@ -103,67 +103,9 @@ client.on('guildMemberAdd', async member => {
 	}
 });
 
-client.on('messageReactionAdd', (rxnObj, member) => {
-	rxnId.set('reaction', rxnObj.message.id);
-	if (rxnObj.message.id != rxnId.get('reaction')) return;
-
-	if  (rxnObj.emoji.name == '🔴') rxnObj.message.guild.members.cache.get(member.id).roles.add('712719658339532884');
-	if  (rxnObj.emoji.name == '🟧') rxnObj.message.guild.members.cache.get(member.id).roles.add('712719737695502428');
-	if  (rxnObj.emoji.name == '🔶') rxnObj.message.guild.members.cache.get(member.id).roles.add('712719808722108506');
-	if  (rxnObj.emoji.name == '🍊') rxnObj.message.guild.members.cache.get(member.id).roles.add('712719854553268254');
-	if  (rxnObj.emoji.name == '🔸') rxnObj.message.guild.members.cache.get(member.id).roles.add('712719898026967111');
-	if  (rxnObj.emoji.name == '🟡') rxnObj.message.guild.members.cache.get(member.id).roles.add('712720013554876506');
-	if  (rxnObj.emoji.name == '🟢') rxnObj.message.guild.members.cache.get(member.id).roles.add('712720095675416597');
-	if  (rxnObj.emoji.name == '🌊') rxnObj.message.guild.members.cache.get(member.id).roles.add('712720095675416597');
-	if  (rxnObj.emoji.name == '🥶') rxnObj.message.guild.members.cache.get(member.id).roles.add('712720130228092939');
-	if  (rxnObj.emoji.name == '🦋') rxnObj.message.guild.members.cache.get(member.id).roles.add('712720165455790161');
-	if  (rxnObj.emoji.name == '🔵') rxnObj.message.guild.members.cache.get(member.id).roles.add('712720209093328898');
-	if  (rxnObj.emoji.name == '🟣') rxnObj.message.guild.members.cache.get(member.id).roles.add('712720257239875585');
-	if  (rxnObj.emoji.name == '🐷') rxnObj.message.guild.members.cache.get(member.id).roles.add('712720258737242203');
-	if  (rxnObj.emoji.name == '⚫') rxnObj.message.guild.members.cache.get(member.id).roles.add('712720325359435816');
-});
-
 client.on('error', console.error);
 
 client.on('message', async msg => {
-	if (msg.content == 'createRxnRole') {
-		const embed = new MessageEmbed()
-		.setTitle('Selfroles')
-		.setDescription('Here are the selfroles. React if you would like to get a selfrole.')
-		.addField('Red', '🔴')
-		.addField('Extreme Orange', '🟧')
-		.addField('Intense Orange', '🔶')
-		.addField('Orange', '🍊')
-		.addField('Light Orange', '🔸')
-		.addField('Yellow', '🟡')
-		.addField('Green', '🟢')
-		.addField('Sea Green', '🌊')
-		.addField('Cyan', '🥶')
-		.addField('Cerulean', '🦋')
-		.addField('Blue', '🔵')
-		.addField('Purple', '🟣')
-		.addField('Pink', '🐷')
-		.addField('Black', '⚫');
-		
-		const message = await msg.channel.send(embed);
-		
-		await message.react('🔴');
-		await message.react('🟧');
-		await message.react('🔶');
-		await message.react('🍊');
-		await message.react('🔸');
-		await message.react('🟡');
-		await message.react('🟢');
-		await message.react('🌊');
-		await message.react('🥶');
-		await message.react('🦋');
-		await message.react('🔵');
-		await message.react('🟣');
-		await message.react('🐷');
-		await message.react('⚫');
-	}
-	
-	
 	client.Embedder = class {
 		ErrorEmbed(desc) {
 			let emb = new MessageEmbed()
