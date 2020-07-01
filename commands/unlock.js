@@ -18,19 +18,16 @@ module.exports = {
                 const channel = msg.guild.channels.cache.get(id);
 
                 channel.updateOverwrite(msg.guild.roles.everyone, {
-                    SEND_MESSAGES: true,
+                    SEND_MESSAGES: null,
                 });
             });
 
-            channel.setName(channel.name.replace('-🔒', ''));
-
-            emb.delete();
-            PureEmbed.SuccessEmbed(`Locked down all channels successfully!`);
+            PureEmbed.SuccessEmbed(`Unlocked all channels successfully!`);
         } else {
             PureEmbed.LoadingEmbed(`Unlocking <#${channel.id}>...`).then(async emb => {
                 channel.updateOverwrite(msg.guild.roles.everyone, {
-                    SEND_MESSAGES: true,
-                }).then(channel => channel.setName(channel.name.replace('-🔒', '')));
+                    SEND_MESSAGES: null,
+                });
 
                 emb.delete();
                 PureEmbed.SuccessEmbed(`Successfully unlocked <#${channel.id}>!`);

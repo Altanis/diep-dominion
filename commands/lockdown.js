@@ -21,8 +21,6 @@ module.exports = {
                     channel.updateOverwrite(msg.guild.roles.everyone, {
                         SEND_MESSAGES: false,
                     });
-
-                    channel.setName(`${channel.name}-🔒`)
                 });
 
                 emb.delete();
@@ -32,7 +30,7 @@ module.exports = {
             PureEmbed.LoadingEmbed(`Locking down <#${channel.id}>...`).then(async emb => {
                 channel.updateOverwrite(msg.guild.roles.everyone, {
                     SEND_MESSAGES: false,
-                }).then(channel => channel.setName(`${channel.name}-🔒`));
+                });
 
                 emb.delete()
                 PureEmbed.SuccessEmbed(`Locked down <#${channel.id}> successfully!`)
