@@ -16,7 +16,9 @@ module.exports = {
 
         if (!client.mutes.get(member.id)) return PureEmbed.ErrorEmbed('That user is not muted by this bot, or was permanently muted.');
 
-        const time = ms(Date.now() - client.mutes.get(member.id, 'time'), { long: true });
+        let time = Math.abs(client.mutes.get(member.id, 'time') - Date.now());
+        
+        time = ms(time, { long: true });
 
         PureEmbed.SuccessEmbed(`${member.user} has ${time} left to complete his mute!`)
     },
