@@ -119,7 +119,7 @@ client.on('guildMemberAdd', async member => {
 	member.roles.add('712364745805660221');
 	client.channels.cache.get('711962365054287872').send(new MessageEmbed().setTitle(`Welcome ${member.user.username}!`).setDescription('You have just joined Diep Dominion Maintanence, however, as an anti-raid measure, you must answer questions and get verified by staff.').addField('#1', 'Who invited you?').addField('#2', 'What is your favorite color?').addField('#3', 'What tank do you main?').setTimestamp());
 
-	client.channels.cache.get('711969835398987797').send(`Welcome ${member.user}! You have just joined! We now have **${msg.guild.members.filter(m => !m.user.bot).size}** members! Thank you for joining!`);
+	client.channels.cache.get('711969835398987797').send(`Welcome ${member.user}! You have just joined! We now have **${client.guilds.cache.first().members.cache.filter(m => !m.user.bot).size}** members! Thank you for joining!`);
 
 	const embed = new MessageEmbed()
 	.setAuthor('Member Join!', member.user.avatarURL())
