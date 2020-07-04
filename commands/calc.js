@@ -2,7 +2,7 @@ const mathjs = require('mathjs');
 
 module.exports = {
     name: 'calc',
-    aliases: [],
+    aliases: ['calculator'],
     description: 'Returns the value from an expression.',
     category: 'utility',
     run: async (client, msg, args) => {
