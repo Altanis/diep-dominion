@@ -26,7 +26,8 @@ module.exports = {
 
 					msgArr.map(m => m.delete());
 
-					embed.edit(PureEmbed.SuccessEmbed(`Successfully purged **${number}** messages from **${member.user}**!`));
+					embed.delete();
+					PureEmbed.SuccessEmbed(`Successfully purged **${number}** messages from **${member.user}**!`);
 				});
 			});	
 		} else if (args[0].toLowerCase() == 'bot' || args[0].toLowerCase() == 'bots') {
@@ -43,22 +44,19 @@ module.exports = {
 					msg.delete();
 					msgArr.map(m => m.delete());
 
-					embed.edit(PureEmbed.SuccessEmbed(`Successfully purged **${number}** messages from all bots!`));
+					embed.delete();
+					PureEmbed.SuccessEmbed(`Successfully purged **${number}** messages from all bots!`);
 				});
 			});	
 		} else {
 			if (number == 0) return;
 			if (number > 100) return PureEmbed.ErrorEmbed('The argument `number` must be 100 or below.');
-			if (isNaN(number)) return PureEmbed.ErrorEmbed(`The argument \`number\` must be an integer between 1 and 100. Usage: \`$purge @User 50\``);
+			if (isNaN(number)) return PureEmbed.ErrorEmbed(`The argument \`number\` must be an integer between 1 and 100. Usage: \`::purge 50\``);
 			
-			PureEmbed.LoadingEmbed(`Purging **${number}** messages by all bots...`).then(embed => {
-				msg.channel.messages.fetch({ limit: 100 }).then(msgArr => {
-					msgArr = msgArr.array();
-					msgArr.length = number + 1;
-					
-					msgArr.map(m => m.delete());
-
-					embed.edit(PureEmbed.SuccessEmbed(`Successfully purged **${number}** messages from all bots!`));
+			PureEmbed.LoadingEmbed(`Purging **${number}** messages...`).then(embed => {
+				msg.channel.bulkDelete(number).then(() => {
+					embed.delete();
+					PureEmbed.SuccessEmbed(`Successfully purged **${number}** messages!`);
 				});
 			});	
 		}
