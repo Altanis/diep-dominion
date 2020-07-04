@@ -12,6 +12,7 @@
     "enmap": "^5.3.1",
     "express": "^4.17.1",
     "hastebin-gen": "^2.0.5",
+    "mathjs": "^7.0.2",
     "moment": "^2.27.0",
     "ms": "^2.1.2",
     "pastebin-js": "^1.0.5"
