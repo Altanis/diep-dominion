@@ -5,6 +5,8 @@ const { Client, Collection, MessageEmbed } = require('discord.js');
 const fs = require('fs');
 const ASCII = require('ascii-table');
 const Enmap = require('enmap');
+const moment = require('moment');
+const hastebin = require('hastebin-gen');
 
 const table = new ASCII().setHeading('Command', 'Status');
 
@@ -56,6 +58,18 @@ client.on('ready', async () => {
 		console.log(table.toString());
 	});
 	
+	setInterval(() => {
+        let bots = client.guilds.cache.first().members.cache.filter(m => m.user.bot).size;
+        let users = client.guilds.cache.first().members.cache.filter(m => !m.user.bot).size;
+        let emojis = client.guilds.cache.first().emojis.cache.size;
+        let channels = client.guilds.cache.first().channels.cache.filter(c => c.type == 'text' || c.type === 'voice').size;
+
+        client.channels.cache.get('712363667165020221').setName(`Users: ${users}`);
+        client.channels.cache.get('712363718922600469').setName(`Bots: ${bots}`);
+        client.channels.cache.get('712363849575301182').setName(`Emojis: ${emojis}`);
+        client.channels.cache.get('712363821628653666').setName(`Channels: ${channels}`);
+	});
+	
 	await client.bans.defer;
 	
 	setInterval(function() {
@@ -101,6 +115,237 @@ client.on('guildMemberAdd', async member => {
 		member.roles.add('712365121485406378');
 		member.roles.add('712364643724689441'); 
 	}
+
+	member.roles.add('712364745805660221');
+	client.channels.cache.get('711962365054287872').send(new MessageEmbed().setTitle(`Welcome ${member.user.username}!`).setDescription('You have just joined Diep Dominion Maintanence, however, as an anti-raid measure, you must answer questions and get verified by staff.').addField('#1', 'Who invited you?').addField('#2', 'What is your favorite color?').addField('#3', 'What tank do you main?').setTimestamp());
+
+	client.channels.cache.get('711969835398987797').send(`Welcome ${member.user}! You have just joined! We now have **${msg.guild.members.filter(m => !m.user.bot).size}** members! Thank you for joining!`);
+
+	const embed = new MessageEmbed()
+	.setAuthor('Member Join!', member.user.avatarURL())
+	.setColor('BLUE')
+	.addField('Member Tag', member.user.tag)
+	.addField('Joined At', moment().format('MMMM Do YYYY, h:mm:ss A'))
+	.setFooter('Diep Dominion Logging', client.user.avatarURL())
+	.setTimestamp();
+
+	client.channels.cache.get('711969933046710272').send(embed);
+});
+
+client.on('guildMemberRemove', async member => {
+	const embed = new MessageEmbed()
+	.setAuthor('Member Leave!', member.user.avatarURL())
+	.setColor('BLUE')
+	.addField('Member Tag', member.user.tag)
+	.addField('Joined At', member.joinedAt.toDateString())
+	.addField('Left At', moment().format('MMMM Do YYYY, h:mm:ss A'))
+	.setFooter('Diep Dominion Logging', client.user.avatarURL())
+	.setTimestamp();
+
+	client.channels.cache.get('711969933046710272').send(embed);
+});
+
+client.on('guildCreate', guild => guild.leave());
+
+client.on('channelCreate', async channel => {
+	const embed = new MessageEmbed()
+	.setAuthor('Channel Created!', client.user.avatarURL())
+	.setColor('GREEN')
+	.addField('Channel Name', channel.name)
+	.addField('Type', channel.type)
+	.addField('Channel Category', channel.parent.name)
+	.addField('Channel Created At', moment().format('MMMM Do YYYY, h:mm:ss A'))
+	.setFooter('Diep Dominion Logging', client.user.avatarURL())
+	.setTimestamp();
+
+	client.channels.cache.get('711969933046710272').send(embed); 
+});
+
+client.on('channelDelete', async channel => {
+	const embed = new MessageEmbed()
+	.setAuthor('Channel Deleted!', client.user.avatarURL())
+	.setColor('GREEN')
+	.addField('Channel Name', channel.name)
+	.addField('Type', channel.type)
+	.addField('Channel Category', channel.parent.name)
+	.addField('Channel Created At', channel.createdAt.toDateString())
+	.addField('Channel Deleted At', moment().format('MMMM Do YYYY, h:mm:ss A'))
+	.setFooter('Diep Dominion Logging', client.user.avatarURL())
+	.setTimestamp();
+
+	client.channels.cache.get('711969933046710272').send(embed); 
+});
+
+client.on('emojiCreate', async emoji => {
+	const embed = new MessageEmbed()
+	.setAuthor('Emoji Created!', client.user.avatarURL())
+	.setColor('GREEN')
+	.addField('Emoji Name', emoji.name)
+	.addField('Is Animated', (emoji.animated ? 'Yes' : 'No'))
+	.addField('Emoji Display', emoji.toString())
+	.addField('Created At', moment().format('MMMM Do YYYY, h:mm:ss A'))
+	.setFooter('Diep Dominion Logging', client.user.avatarURL())
+	.setTimestamp();
+
+	client.channels.cache.get('711969933046710272').send(embed); 
+});
+
+client.on('emojiDelete', async emoji => {
+	const embed = new MessageEmbed()
+	.setAuthor('Emoji Deleted!', client.user.avatarURL())
+	.setColor('RED')
+	.addField('Emoji Name', emoji.name)
+	.addField('Is Animated', (emoji.animated ? 'Yes' : 'No'))
+	.addField('Created At', emoji.createdAt.toDateString())
+	.addField('Deleted At', moment().format('MMMM Do YYYY, h:mm:ss A'))
+	.setFooter('Diep Dominion Logging', client.user.avatarURL())
+	.setTimestamp();
+
+	client.channels.cache.get('711969933046710272').send(embed); 
+});
+
+client.on('emojiUpdate', async (oldEmoji, newEmoji) => {
+    const difference = Object.keys(oldEmoji).filter(k => oldEmoji[k] !== newEmoji[k])[0];
+	
+	const embed = new MessageEmbed()
+	.setAuthor('Emoji Updated!', client.user.avatarURL())
+	.setColor('YELLOW')
+	.addField(`Old Emoji ${difference.charAt(0).toUpperCase() + difference.replace(difference.charAt(0), '')}`, oldEmoji[difference])
+	.addField(`New Emoji ${difference.charAt(0).toUpperCase() + difference.replace(difference.charAt(0), '')}`, newEmoji[difference])
+	.setFooter('Diep Dominion Logging', client.user.avatarURL())
+	.setTimestamp();
+
+	client.channels.cache.get('711969933046710272').send(embed); 
+});
+
+client.on('guildBanAdd', async (_guild, user) => {
+	const embed = new MessageEmbed()
+	.setAuthor('Member Banned!', client.user.avatarURL())
+	.setColor('RED')
+	.addField('Member Tag', user.tag)
+	.addField('Member ID', user.id)
+	.addField('Banned At', moment().format('MMMM Do YYYY, h:mm:ss A'))
+	.setFooter('Diep Dominion Logging', client.user.avatarURL())
+	.setTimestamp();
+
+	client.channels.cache.get('711969933046710272').send(embed); 
+});
+
+client.on('guildBanRemove', async (guild, user) => {
+	const embed = new MessageEmbed()
+	.setAuthor('Member Unbanned!', client.user.avatarURL())
+	.setColor('GREEN')
+	.addField('Member Tag', user.tag)
+	.addField('Member ID', user.id)
+	.addField('Unbanned At', moment().format('MMMM Do YYYY, h:mm:ss A'))
+	.setFooter('Diep Dominion Logging', client.user.avatarURL())
+	.setTimestamp();
+
+	client.channels.cache.get('711969933046710272').send(embed); 
+});
+
+client.on('guildUpdate', async (oldGuild, newGuild) => {
+    const difference = Object.keys(oldGuild).filter(k => oldGuild[k] !== newGuild[k])[0];
+	
+	const embed = new MessageEmbed()
+	.setAuthor('Guild Updated!', client.user.avatarURL())
+	.setColor('YELLOW')
+	.addField(`Old Guild ${difference.charAt(0).toUpperCase() + difference.replace(difference.charAt(0), '')}`, oldGuild[difference])
+	.addField(`New Guild ${difference.charAt(0).toUpperCase() + difference.replace(difference.charAt(0), '')}`, newGuild[difference])
+	.setFooter('Diep Dominion Logging', client.user.avatarURL())
+	.setTimestamp();
+
+	client.channels.cache.get('711969933046710272').send(embed); 
+});
+
+client.on('messageDeleteBulk', async messages => {
+	let arr = [];
+	messages.map(message => {
+		arr.push(`${message.content} by: ${message.author.tag}`);
+	});
+
+	const str = arr.join('\n');
+	let t;
+
+	hastebin(str, { extension: 'txt' }).then(haste => {
+		t = haste;
+	});
+
+	const embed = new MessageEmbed()
+	.setAuthor('Bulk Delete', client.user.avatarURL())
+	.setColor('BLUE')
+	.addField('Channel Bulk Deleted In', messages.first().channel.name)
+	.addField('Bulk Delete Amount', messages.size)
+	.addField('Messages', t)
+	.setFooter('Diep Dominion Logging', client.user.avatarURL())
+	.setTimestamp();
+
+	client.channels.cache.get('711969933046710272').send(embed); 
+});
+
+client.on('roleCreate', async role => {
+	const embed = new MessageEmbed()
+	.setAuthor('Role Created!', client.user.avatarURL())
+	.setColor('GREEN')
+	.addField('Role Name', role.name)
+	.addField('Role ID', role.id)
+	.addField('Created At', moment().format('MMMM Do YYYY, h:mm:ss A'))
+	.setFooter('Diep Dominion Logging', client.user.avatarURL())
+	.setTimestamp();
+
+	client.channels.cache.get('711969933046710272').send(embed); 
+});
+
+client.on('roleDelete', async role => {
+	const embed = new MessageEmbed()
+	.setAuthor('Role Deleted!', client.user.avatarURL())
+	.setColor('RED')
+	.addField('Role Name', role.name)
+	.addField('Created At', role.createdAt.toDateString())
+	.addField('Deleted At', moment().format('MMMM Do YYYY, h:mm:ss A'))
+	.setFooter('Diep Dominion Logging', client.user.avatarURL())
+	.setTimestamp();
+
+	client.channels.cache.get('711969933046710272').send(embed); 
+});
+
+client.on('roleUpdate', async (oldRole, newRole) => {
+    const difference = Object.keys(oldRole).filter(k => oldRole[k] !== newRole[k])[0];
+	
+	const embed = new MessageEmbed()
+	.setAuthor('Role Updated!', client.user.avatarURL())
+	.setColor('YELLOW')
+	.addField(`Old Role ${difference.charAt(0).toUpperCase() + difference.replace(difference.charAt(0), '')}`, oldRole[difference])
+	.addField(`New Role ${difference.charAt(0).toUpperCase() + difference.replace(difference.charAt(0), '')}`, newRole[difference])
+	.setFooter('Diep Dominion Logging', client.user.avatarURL())
+	.setTimestamp();
+
+	client.channels.cache.get('711969933046710272').send(embed); 
+});
+
+client.on('messageDelete', async msg => {
+	const embed = new MessageEmbed()
+	.setAuthor('Message Deleted!', msg.author.avatarURL())
+	.setColor('RED')
+	.addField('Content', msg.content)
+	.addField('Author', msg.author.tag)
+	.setFooter('Diep Dominion Logging', msg.author.avatarURL())
+	.setTimestamp();
+
+	client.channels.cache.get('711969933046710272').send(embed);
+});
+
+client.on('messageUpdate', async (oldMsg, newMsg) => {
+	const embed = new MessageEmbed()
+	.setAuthor('Message Edited!', newMsg.author.avatarURL())
+	.setColor('ORANGE')
+	.addField('Old Content', oldMsg.content)
+	.addField('New Content', newMsg.content)
+	.addField('Author', newMsg.author)
+	.setFooter('Diep Dominion Logging', client.user.avatarURL())
+	.setTimestamp();
+
+	client.channels.cache.get('711969933046710272').send(embed);
 });
 
 client.on('error', console.error);
