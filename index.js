@@ -347,6 +347,8 @@ client.on('messageDelete', async msg => {
 });
 
 client.on('messageUpdate', async (oldMsg, newMsg) => {
+	if (!oldMsg || !newMsg) return;
+	
 	const embed = new MessageEmbed()
 	.setAuthor('Message Edited!', newMsg.author.avatarURL())
 	.setColor('ORANGE')
