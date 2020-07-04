@@ -13,7 +13,8 @@
     "express": "^4.17.1",
     "hastebin-gen": "^2.0.5",
     "moment": "^2.27.0",
-    "ms": "^2.1.2"
+    "ms": "^2.1.2",
+    "pastebin-js": "^1.0.5"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

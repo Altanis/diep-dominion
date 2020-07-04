@@ -6,7 +6,12 @@ const fs = require('fs');
 const ASCII = require('ascii-table');
 const Enmap = require('enmap');
 const moment = require('moment');
-const hastebin = require('hastebin-gen');
+const pastebinapi = require('pastebin-js');
+const pastebin = new pastebinapi({
+	'api_dev_key': process.env.DEVKEY,
+	'api_user_name': process.env.USERNAME,
+	'api_user_password': process.env.PASSWORD,
+});
 
 const table = new ASCII().setHeading('Command', 'Status');
 
@@ -17,8 +22,6 @@ client.cmdInfo = new Collection();
 client.checkPermission = (argument, permission_node = 'ADMINISTRATOR') => {
 	return argument.permissions.has(permission_node);
 };
-
-const rxnId = new Enmap({ name: 'rxnid' });
 
 client.bans = new Enmap({ name: 'bans' });
 client.mutes = new Enmap({ name: 'mutes' });
@@ -261,26 +264,34 @@ client.on('guildUpdate', async (oldGuild, newGuild) => {
 client.on('messageDeleteBulk', async messages => {
 	let arr = [];
 	messages.map(message => {
-		arr.push(`${message.content} by: ${message.author.tag}`);
+		arr.push(`${message.content ? message.content : message.embeds[0].description} by: ${message.author.tag}`);
 	});
 
 	const str = arr.join('\n');
-	let t;
 
-	hastebin(str, { extension: 'txt' }).then(haste => {
-		t = haste;
-	});
-
-	const embed = new MessageEmbed()
-	.setAuthor('Bulk Delete', client.user.avatarURL())
-	.setColor('BLUE')
-	.addField('Channel Bulk Deleted In', messages.first().channel.name)
-	.addField('Bulk Delete Amount', messages.size)
-	.addField('Messages', t)
-	.setFooter('Diep Dominion Logging', client.user.avatarURL())
-	.setTimestamp();
-
-	client.channels.cache.get('711969933046710272').send(embed); 
+	pastebin.createPaste(str, 'Deleted Messages').then(data => {
+		const embed = new MessageEmbed()
+		.setAuthor('Bulk Delete', client.user.avatarURL())
+		.setColor('BLUE')
+		.addField('Channel Bulk Deleted In', messages.first().channel.name)
+		.addField('Bulk Delete Amount', messages.size)
+		.addField('Messages', data)
+		.setFooter('Diep Dominion Logging', client.user.avatarURL())
+		.setTimestamp();
+	
+		client.channels.cache.get('711969933046710272').send(embed); 
+	}).fail(err => {
+		const embed = new MessageEmbed()
+		.setAuthor('Bulk Delete', client.user.avatarURL())
+		.setColor('BLUE')
+		.addField('Channel Bulk Deleted In', messages.first().channel.name)
+		.addField('Bulk Delete Amount', messages.size)
+		.addField('Messages', `Failure to create paste ; Error: ${err}`)
+		.setFooter('Diep Dominion Logging', client.user.avatarURL())
+		.setTimestamp();
+	
+		client.channels.cache.get('711969933046710272').send(embed); 
+	})
 });
 
 client.on('roleCreate', async role => {
