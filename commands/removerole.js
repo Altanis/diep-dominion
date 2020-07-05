@@ -4,7 +4,7 @@ const ms = require('ms');
 module.exports = {
     name: 'removerole',
     aliases: [],
-    description: 'Adds a role to a user.',
+    description: 'Removes a role from a user.',
     usage: '::removerole <UserMention/UserID> <RoleName/RoleID>',
     category: 'mod',
     run: async (client, msg, args) => {

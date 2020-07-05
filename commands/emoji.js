@@ -2,6 +2,7 @@ module.exports = {
     name: 'emoji',
     aliases: [],
     description: 'Displays a supersized image of an emoji as a GIF or PNG image.',
+    usage: '::emoji <emoji>',
     category: 'utility',
     run: async (client, msg, args) => {
         const PureEmbed = new client.Embedder();

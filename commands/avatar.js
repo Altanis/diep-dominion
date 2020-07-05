@@ -2,6 +2,7 @@ module.exports = {
     name: 'avatar',
     aliases: [],
     description: 'Displays a user\'s avatar, and if none inputted, your own avatar.',
+    usage: '::avatar <member> --default:sent-member',
     category: 'utility',
     run: async (client, msg, args) => {
         const PureEmbed = new client.Embedder();

@@ -4,6 +4,7 @@ module.exports = {
     name: 'calc',
     aliases: ['calculator'],
     description: 'Returns the value from an expression.',
+    usage: '::calc <expression>',
     category: 'utility',
     run: async (client, msg, args) => {
         const PureEmbed = new client.Embedder();
