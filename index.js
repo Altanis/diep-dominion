@@ -347,7 +347,7 @@ client.on('messageDelete', async msg => {
 });
 
 client.on('messageUpdate', async (oldMsg, newMsg) => {
-	if (!oldMsg || !newMsg) return;
+	if (!oldMsg.content || !newMsg.content) return;
 	
 	const embed = new MessageEmbed()
 	.setAuthor('Message Edited!', newMsg.author.avatarURL())
